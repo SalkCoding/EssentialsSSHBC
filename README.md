@@ -1,0 +1,2 @@
+# EssentialsSSHBC
+EssentialsSSH for BungeeCord
