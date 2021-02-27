@@ -41,6 +41,8 @@ class CommandReceiver : BungeeChannelApi.ForwardConsumer {
                             messageOut.writeUTF(uuid.toString())
                         } catch (exception: IOException) {
                             exception.printStackTrace()
+                        } finally {
+                            messageOut.close()
                         }
                         //For other server teleport(Teleports are managed by EssentialsSSH)
                         bungeeApi.forward(serverName, "essentials-home-teleport", messageBytes.toByteArray())
@@ -97,6 +99,8 @@ class CommandReceiver : BungeeChannelApi.ForwardConsumer {
                         messageOut.writeUTF(playerName)
                     } catch (exception: IOException) {
                         exception.printStackTrace()
+                    } finally {
+                        messageOut.close()
                     }
                     bungeeApi.forward(serverName, "essentials-spawn-teleport", messageBytes.toByteArray())
                 }

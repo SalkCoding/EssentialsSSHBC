@@ -56,19 +56,21 @@ object TeleportCooltime {
                 return
             }
             if (cooldownTick < 0 || player.isOp) {
-                player.sendMessage("이동중입니다.".infoFormat())
-                player.world.playSound(player.location, Sound.ENTITY_ENDERMAN_TELEPORT, 0.5f, 1f)
-                if (to != null)
-                    Bukkit.getScheduler().runTask(essentials, Runnable {
+                //player.sendMessage("이동중입니다.".infoFormat())
+                player.sendTitle("\ue405", "", 30, 10, 30)
+                Bukkit.getScheduler().runTaskLater(essentials, Runnable {
+                    if (to != null)
                         player.teleportAsync(to, PlayerTeleportEvent.TeleportCause.COMMAND)
-                    })
-                if (callback != null) {
-                    if (isAsync) Bukkit.getScheduler().runTaskAsynchronously(essentials, callback)
-                    else Bukkit.getScheduler().runTask(essentials, callback)
-                }
+
+                    if (callback != null) {
+                        if (isAsync) Bukkit.getScheduler().runTaskAsynchronously(essentials, callback)
+                        else callback.run()
+                    }
+                }, 30)
                 stop()
                 return
             } else {
+                player.resetTitle()
                 player.sendTitle(
                     "${ChatColor.GOLD}텔레포트 중입니다...",
                     "${ChatColor.GRAY}이동 ${String.format("%.1f", cooldownTick / 20f)}초 전...",

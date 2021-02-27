@@ -65,6 +65,8 @@ class BedListener : Listener {
                     messageOut.writeFloat(location.pitch)
                 } catch (exception: IOException) {
                     exception.printStackTrace()
+                } finally {
+                    messageOut.close()
                 }
                 bungeeApi.forward("ALL", "essentials-sethome", messageBytes.toByteArray())
             })
@@ -94,6 +96,8 @@ class BedListener : Listener {
                 messageOut.writeDouble(location.z)
             } catch (exception: IOException) {
                 exception.printStackTrace()
+            } finally {
+                messageOut.close()
             }
             bungeeApi.forward("ALL", "essentials-sethome-delete", messageBytes.toByteArray())
         })

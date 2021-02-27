@@ -24,6 +24,8 @@ class PlayerRespawnListener : Listener {
                 messageOut.writeUTF(currentServerName)
             } catch (exception: IOException) {
                 exception.printStackTrace()
+            } finally {
+                messageOut.close()
             }
             bungeeApi.forward("ALL", "essentials-spawn", messageBytes.toByteArray())
         }, 5)

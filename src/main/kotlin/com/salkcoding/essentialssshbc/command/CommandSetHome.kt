@@ -36,6 +36,8 @@ class CommandSetHome : CommandExecutor {
                 messageOut.writeFloat(location.pitch)
             } catch (exception: IOException) {
                 exception.printStackTrace()
+            } finally {
+                messageOut.close()
             }
             bungeeApi.forward("ALL", "essentials-sethome", messageBytes.toByteArray())
         })
