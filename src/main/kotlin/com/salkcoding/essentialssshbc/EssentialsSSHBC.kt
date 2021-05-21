@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin
 lateinit var essentials: EssentialsSSHBC
 lateinit var bungeeApi: BungeeChannelApi
 lateinit var currentServerName: String
+lateinit var enabledWorld: Set<String>
 
 class EssentialsSSHBC : JavaPlugin() {
 
@@ -20,6 +21,7 @@ class EssentialsSSHBC : JavaPlugin() {
 
         saveDefaultConfig()
         currentServerName = config.getString("serverName")!!
+        enabledWorld = config.getList("enabledWorld")!!.toSet() as Set<String>
 
         bungeeApi = BungeeChannelApi.of(this)
 

@@ -3,6 +3,7 @@ package com.salkcoding.essentialssshbc.command
 import com.salkcoding.essentialssshbc.bungeeApi
 import com.salkcoding.essentialssshbc.currentServerName
 import com.salkcoding.essentialssshbc.essentials
+import com.salkcoding.essentialssshbc.util.errorFormat
 import com.salkcoding.essentialssshbc.util.infoFormat
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -17,6 +18,11 @@ class CommandSetHome : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) {
             essentials.logger.warning("Player only command")
+            return true
+        }
+
+        if (!sender.isOp) {
+            sender.sendMessage("해당 명령어를 사용할 권한이 없습니다!".errorFormat())
             return true
         }
 

@@ -16,18 +16,18 @@ class PlayerRespawnListener : Listener {
     @EventHandler
     fun onRespawn(event: PlayerRespawnEvent) {
         val player = event.player
+        player.sendTitle("\ue405", "", 0, 20, 30)
         Bukkit.getScheduler().runTaskLaterAsynchronously(essentials, Runnable {
             val messageBytes = ByteArrayOutputStream()
             val messageOut = DataOutputStream(messageBytes)
             try {
                 messageOut.writeUTF(player.name)
-                messageOut.writeUTF(currentServerName)
             } catch (exception: IOException) {
                 exception.printStackTrace()
             } finally {
                 messageOut.close()
             }
-            bungeeApi.forward("ALL", "essentials-spawn", messageBytes.toByteArray())
+            bungeeApi.forward("ALL", "essentials-respawn", messageBytes.toByteArray())
         }, 5)
     }
 }

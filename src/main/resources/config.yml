@@ -1,1 +1,3 @@
 serverName: "server"
+enabledWorld:
+  - "world_nether"

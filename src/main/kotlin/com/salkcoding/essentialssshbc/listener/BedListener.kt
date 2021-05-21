@@ -2,7 +2,9 @@ package com.salkcoding.essentialssshbc.listener
 
 import com.salkcoding.essentialssshbc.bungeeApi
 import com.salkcoding.essentialssshbc.currentServerName
+import com.salkcoding.essentialssshbc.enabledWorld
 import com.salkcoding.essentialssshbc.essentials
+import com.salkcoding.essentialssshbc.util.errorFormat
 import com.salkcoding.essentialssshbc.util.infoFormat
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -46,6 +48,11 @@ class BedListener : Listener {
 
         if (event.action == Action.RIGHT_CLICK_BLOCK && event.clickedBlock != null) {
             if (event.clickedBlock!!.type !in bedSet) return
+
+            if (world.name !in enabledWorld) {
+                player.sendMessage("현재 월드에서는 사용할 수 없습니다.".errorFormat())
+                return
+            }
 
             val location = event.clickedBlock!!.location
             player.setBedSpawnLocation(location, true)
