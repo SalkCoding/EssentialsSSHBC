@@ -1,7 +1,6 @@
 package com.salkcoding.essentialssshbc.listener
 
 import com.salkcoding.essentialssshbc.bungeeApi
-import com.salkcoding.essentialssshbc.currentServerName
 import com.salkcoding.essentialssshbc.essentials
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
@@ -17,7 +16,7 @@ class PlayerRespawnListener : Listener {
     fun onRespawn(event: PlayerRespawnEvent) {
         val player = event.player
         player.sendTitle("\ue405", "", 0, 20, 30)
-        Bukkit.getScheduler().runTaskLaterAsynchronously(essentials, Runnable {
+        Bukkit.getScheduler().runTaskAsynchronously(essentials, Runnable {
             val messageBytes = ByteArrayOutputStream()
             val messageOut = DataOutputStream(messageBytes)
             try {
@@ -28,6 +27,6 @@ class PlayerRespawnListener : Listener {
                 messageOut.close()
             }
             bungeeApi.forward("ALL", "essentials-respawn", messageBytes.toByteArray())
-        }, 5)
+        })
     }
 }
