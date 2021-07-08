@@ -1,14 +1,12 @@
 package com.salkcoding.essentialssshbc.listener
 
-import com.salkcoding.essentialssshbc.bungeeApi
+import com.google.gson.JsonObject
 import com.salkcoding.essentialssshbc.essentials
+import com.salkcoding.essentialssshbc.metamorphosis
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerRespawnEvent
-import java.io.ByteArrayOutputStream
-import java.io.DataOutputStream
-import java.io.IOException
 
 class PlayerRespawnListener : Listener {
 
@@ -18,16 +16,11 @@ class PlayerRespawnListener : Listener {
         event.respawnLocation = player.location
         player.sendTitle("\ue405", "", 0, 50, 30)
         Bukkit.getScheduler().runTaskLaterAsynchronously(essentials, Runnable {
-            val messageBytes = ByteArrayOutputStream()
-            val messageOut = DataOutputStream(messageBytes)
-            try {
-                messageOut.writeUTF(player.name)
-            } catch (exception: IOException) {
-                exception.printStackTrace()
-            } finally {
-                messageOut.close()
+            val json = JsonObject().apply {
+                addProperty("uuid", player.uniqueId.toString())
+                addProperty("name", player.name)
             }
-            bungeeApi.forward("ALL", "essentials-respawn", messageBytes.toByteArray())
+            metamorphosis.send("com.salkcoding.essentialsssh.respawn", json.toString())
         }, 10)
     }
 }

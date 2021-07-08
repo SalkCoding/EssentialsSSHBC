@@ -58,7 +58,7 @@ object TeleportCooltime {
             if (cooldownTick < 0 || player.isOp) {
                 //player.sendMessage("이동중입니다.".infoFormat())
                 player.playSound(player.location, Sound.BLOCK_PORTAL_TRAVEL, 0.15f, 1f)
-                player.sendTitle("\ue405", "", 30, 10, 30)
+                player.sendTitle("\ue405", "", 30, 40, 30)
                 Bukkit.getScheduler().runTaskLater(essentials, Runnable {
                     if (to != null)
                         player.teleportAsync(to, PlayerTeleportEvent.TeleportCause.COMMAND)

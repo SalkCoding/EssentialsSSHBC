@@ -1,22 +1,20 @@
 package com.salkcoding.essentialssshbc.listener
 
-import com.salkcoding.essentialssshbc.bungeeApi
+import com.google.gson.JsonObject
 import com.salkcoding.essentialssshbc.currentServerName
 import com.salkcoding.essentialssshbc.enabledWorld
 import com.salkcoding.essentialssshbc.essentials
-import com.salkcoding.essentialssshbc.util.errorFormat
+import com.salkcoding.essentialssshbc.metamorphosis
 import com.salkcoding.essentialssshbc.util.infoFormat
+import com.salkcoding.essentialssshbc.util.sendErrorTipMessage
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Material
-import org.bukkit.World
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import java.io.ByteArrayOutputStream
-import java.io.DataOutputStream
-import java.io.IOException
 
 class BedListener : Listener {
 
@@ -51,7 +49,7 @@ class BedListener : Listener {
             if (event.clickedBlock!!.type !in bedSet) return
 
             if (world.name !in enabledWorld) {
-                player.sendMessage("현재 월드에서는 사용할 수 없습니다.".errorFormat())
+                player.sendErrorTipMessage("${ChatColor.RED}현재 월드에서는 사용할 수 없습니다.")
                 return
             }
 
@@ -60,23 +58,17 @@ class BedListener : Listener {
             player.sendMessage("홈으로 설정되었습니다.".infoFormat())
 
             Bukkit.getScheduler().runTaskAsynchronously(essentials, Runnable {
-                val messageBytes = ByteArrayOutputStream()
-                val messageOut = DataOutputStream(messageBytes)
-                try {
-                    messageOut.writeUTF(player.uniqueId.toString())
-                    messageOut.writeUTF(currentServerName)
-                    messageOut.writeUTF(location.world.name)
-                    messageOut.writeDouble(location.x)
-                    messageOut.writeDouble(location.y)
-                    messageOut.writeDouble(location.z)
-                    messageOut.writeFloat(location.yaw)
-                    messageOut.writeFloat(location.pitch)
-                } catch (exception: IOException) {
-                    exception.printStackTrace()
-                } finally {
-                    messageOut.close()
+                val json = JsonObject().apply {
+                    addProperty("uuid", player.uniqueId.toString())
+                    addProperty("serverName", currentServerName)
+                    addProperty("worldName", location.world.name)
+                    addProperty("x", location.x)
+                    addProperty("y", location.y)
+                    addProperty("z", location.z)
+                    addProperty("yaw", location.yaw)
+                    addProperty("pitch", location.pitch)
                 }
-                bungeeApi.forward("ALL", "essentials-sethome", messageBytes.toByteArray())
+                metamorphosis.send("com.salkcoding.essentialsssh.sethome", json.toString())
             })
 
             event.isCancelled = true
@@ -92,22 +84,17 @@ class BedListener : Listener {
         val location = event.block.location
 
         Bukkit.getScheduler().runTaskAsynchronously(essentials, Runnable {
-            val messageBytes = ByteArrayOutputStream()
-            val messageOut = DataOutputStream(messageBytes)
-            try {
-                messageOut.writeUTF(player.name)
-                messageOut.writeUTF(player.uniqueId.toString())
-                messageOut.writeUTF(currentServerName)
-                messageOut.writeUTF(location.world.name)
-                messageOut.writeDouble(location.x)
-                messageOut.writeDouble(location.y)
-                messageOut.writeDouble(location.z)
-            } catch (exception: IOException) {
-                exception.printStackTrace()
-            } finally {
-                messageOut.close()
+            val json = JsonObject().apply {
+                addProperty("uuid", player.uniqueId.toString())
+                addProperty("serverName", currentServerName)
+                addProperty("worldName", location.world.name)
+                addProperty("x", location.x)
+                addProperty("y", location.y)
+                addProperty("z", location.z)
+                addProperty("yaw", location.yaw)
+                addProperty("pitch", location.pitch)
             }
-            bungeeApi.forward("ALL", "essentials-sethome-delete", messageBytes.toByteArray())
+            metamorphosis.send("com.salkcoding.essentialsssh.delhome", json.toString())
         })
     }
 }
